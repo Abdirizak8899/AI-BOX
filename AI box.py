@@ -1,3 +1,8 @@
+"""
+Aouthor : Abdirizak Abdullahi 
+Date : 6/25/2022
+"""
+
 import pygame as pyg ,random as rand ,time , sys , datetime
 from pygame.locals import *
 # screen peparation
