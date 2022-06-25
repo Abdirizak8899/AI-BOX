@@ -2,7 +2,6 @@
 Aouthor : Abdirizak Abdullahi 
 Date : 6/25/2022
 """
-
 import pygame as pyg ,random as rand ,time , sys , datetime
 from pygame.locals import *
 # screen peparation
@@ -19,16 +18,12 @@ else:
 	print('[+1] Game initialized successfully! with {check_errs[1]} Zero error')
 # GAME VARIABLES
 fps = pyg.time.Clock()#frame per second
-obstacle_poss = [[0,-10],[200,200]]
+obstacle_poss = [[0,-10],[200,200]]#new obstacles position
 score = 0
 value = 0
 speed = 5
+# intializing the font
 pyg.font.init()
-
-obstacle1 = False
-obstacle2 = False
-obstacle3 = False
-
 
 # functions
 
@@ -102,12 +97,6 @@ def new_obstacle2():
 		pyg.draw.rect(screen,"white",[x,y,obstacle_width,obstacle_hight])
 
 
-def score_count(score):
-	myFont = pyg.font.SysFont("monospace", 16)
-	text = "Score:" + str(score)
-	label = myFont.render(text, 1, "YELLOW")
-	screen.blit(label, (30,5))
-
 def outomove_obstacle1():
 	global speed
 	position = obstacle_poss[0]
@@ -132,40 +121,59 @@ def outomove_obstacle2():
 	elif position[1] < player_pos[1]:
 		position[1] += speed
 
-
+# detecting collisions
 def detect_collision(player_pos,obstacle_poss):
 	for pos in obstacle_poss:
 		if pos == player_pos or obstacle_pos == player_pos:
 			return True
 		return False
 
+# score function
+def score_count(score):
+	myFont = pyg.font.SysFont("monospace", 16)
+	text = "Score:" + str(score)
+	label = myFont.render(text, 1, "YELLOW")
+	screen.blit(label, (30,5))
 
 gameover = False
 while not gameover:
 	screen.fill("black")
 	fps.tick(120)
+	# drawing
 	player = draw_player(screen)
 	obstacle = draw_obstacle(screen)
 	#event handling 
 	for event in pyg.event.get():
 		if event.type == QUIT:
 			gameover = True
+	
+	# listening what key is pressed
 	key_pressed = pyg.key.get_pressed()
+	# moving the player by controlling the user
 	move_player(key_pressed)
+	# outomoving obstacle 
 	move_obstacles()
+	
+	#detecting collision 
 	if detect_collision(player_pos,obstacle_poss):
 		gameover = True
-	#------------------------- 
+#------------------------- 
 	score_count(score)
+	
+	# every second = new score+=1
 	value +=1
 	if value ==70:
 		score +=1
 		value = 0
 # -----------------------
+	"""
+	new obstacle when ever these scores below
+	"""
 	if score >20:
 		new_obstacle1()
 		outomove_obstacle1()
 	if score > 50:
 		new_obstacle2()
 		outomove_obstacle2()
+#----------------------------
 	pyg.display.flip()
